@@ -1,0 +1,46 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<%= javascript_include_tag "posts.js" %>
+<div class="container post-details">
+   <div class="row">
+      <div class="col-8">
+         <div class="insta-post">
+            <%= image_tag @post.image, class: "img img-fluid" if @post.image.present? %>   
+            <%= link_to "Edit here", edit_user_post_path(@post.user_id, @post.id), class: "text-dark" if @post.user_id == current_user.id %> <br>
+            <%= link_to "Delete", user_post_path(@post.user_id, @post.id), class: "text-dark", method: :delete, data: { confirm: "Do you really want to delete me?" } if @post.user_id == current_user.id %>
+         </div>
+      </div>
+      <div class="col-4">
+         <div class="post-meta">
+            <!--image_tag(@post.user.image.thumb.url, class: "img-circle") -->
+            <%= link_to profile_picture(@post.user, 25), profile_path(@post.user.username) %> 
+            <%= link_to @post.user.username, profile_path(@post.user.username), class: "text-dark" %> 
+         </div>
+         <div class="post-details">
+            <div class="comments-feed">
+               <%= simple_format @post.description %>
+               <%= render "posts/comments", post: @post %>
+            </div>
+            <div class="post-actions"> 
+               <i class="fa fa-heart like-<%= @post.id %> <%= "active" if post_liked_by_user?(@post.id) %> fa-2x post-like" data-id="<%= @post.id %>"> </i>
+               <i class="fa fa-comment fa-2x post-comment" id="post-comment"> </i>
+            </div>
+            <p><strong id="post-<%= @post.id %>-likes"> <%= link_to pluralize(@post.total_likes, "like"), like_list_path(@post.id), class: "text-dark" %> </strong></p>
+            <p class="text-muted"> <%= time_ago_in_words @post.created_at %> ago</p>
+         </div>
+         <div class="comment-box">
+            <%= form_for @comment do |f| %> 
+            <%= f.hidden_field :post_id, value: @post.id %>
+            <!-- added this extra hidden return field only to the show page to make sure the comment request is goin from show page so we redirect user to same page-->
+            <%= f.hidden_field :return_to, value: "post" %>
+            <div class="input-group">
+               <%= f.text_field :comment, placeholder: "Add a comment ...", class: "form-control post-comment" %>
+               <div class="input-group-append">
+                  <%= f.submit "Post", class: "btn btn-info float-right" %> 
+               </div>
+            </div>
+            <% end %>
+         </div>
+      </div>
+   </div>
+</div>
+

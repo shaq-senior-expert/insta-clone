@@ -1,0 +1,17 @@
+
+<% @users.each do |user| %>
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src= <%= if user.image
+                                       "#{user.image}"
+                                     else "https://s.clipartkey.com/mpngs/s/152-1520367_user-profile-default-image-png-clipart-png-download.png" end %> 
+  
+  alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title"> <%= "#{user.username}" %> </h5>
+    <p class="card-text"> <%= "#{user.full_name}" %> </p>
+    <p class="card-text"> <%= "#{user.email}" %> </p>
+    <p class="card-text"> Followers: <%= "#{user.followers.size}" %> and Following: <%= "#{user.followings.size}" %></p>
+    <a href= <%= "/users/#{user.username}" %>  class="btn btn-info">Profile</a>
+  </div>
+</div>
+<% end %>

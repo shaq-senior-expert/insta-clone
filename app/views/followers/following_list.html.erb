@@ -1,0 +1,4 @@
+<h3> Following </h3> <br><br>
+<% @users.each do |user| %>
+    <%= link_to user.username, profile_path(user.username), class: "text-dark" %><br>
+<% end %>

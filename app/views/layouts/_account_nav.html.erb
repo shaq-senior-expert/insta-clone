@@ -1,0 +1,20 @@
+<li class="nav-item active">
+   <%= link_to posts_path, class: "nav-link" do %>
+   <i class="fa fa-home fa-2x"  ></i>
+   <% end %>
+</li>
+<li class="nav-item">
+   <%= link_to new_user_post_path(current_user.id), class: "nav-link" do %>
+   <i class="fa fa-plus-square fa-2x"></i>
+   <% end %>
+</li>
+<li class="nav-item">
+   <%= link_to profile_path(current_user.username), class: "nav-link" do %> 
+   <i class="fa fa-user fa-2x" aria-hidden="true"></i>
+   <% end %>
+</li>
+<li class="nav-item">
+   <%= link_to destroy_user_session_path, method: :delete, class: "nav-link" do %>  
+   <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+   <% end %>  
+</li>

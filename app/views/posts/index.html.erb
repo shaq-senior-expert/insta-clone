@@ -1,0 +1,70 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<%= javascript_include_tag "posts.js" %>
+<div class="container">
+   <div class="row">
+      <div class="col-8">
+         <% @posts.each do |post| %>
+         <div class="insta-post">
+            <div class="post-meta"> 
+               <%= link_to profile_picture(post.user, 50, 50), profile_path(post.user.username) %> 
+               <%= link_to post.user.username, profile_path(post.user.username), class: "text-dark" %> 
+               <i id="edit-button" class="fa fa-ellipsis-h edit-btn" aria-hidden="true"></i>
+            </div>
+            <%= image_tag post.image, class: "img img-fluid" %> 
+            <!-- post-actions start -->
+            <!-- post-actions end  -->
+            <div class="post-details">
+               <div class="post-actions"> 
+                  <i class="fa fa-heart like-<%= post.id %> <%= "active" if post_liked_by_user?(post.id) %> fa-2x post-like" data-id="<%= post.id %>"> </i>
+                  <%= link_to user_post_path(post.user.id, post.id) do %>  
+                  <i class="fa fa-comment fa-2x post-comment"> </i> 
+                  <% end %>
+               </div>
+               <p><strong id="post-<%= post.id %>-likes"> <%= link_to pluralize(post.total_likes, "like"), like_list_path(post.id), class: "text-dark" %> </strong></p>
+               <p><strong id="post-<%= post.id %>-comments"> <%= link_to post.user.username, profile_path(post.user.username), class: "text-dark" %> </strong></p>
+               <%= simple_format post.description %>
+               <p class="text-muted"> <%= time_ago_in_words post.created_at %> ago</p>
+               <%= render "posts/comments", post: post %> 
+            </div>
+            
+            <% if @comment.errors.any? %>
+               <h5 class="error"><%= @comment.errors.full_messages.to_sentence %></h5>
+            <% end %>
+            
+            <% # Comment box %>
+            
+            <div class="comment-box">
+               <%= form_for @comment do |f| %> 
+               <%= f.hidden_field :post_id, value: post.id %>
+               <div class="input-group">
+                  <%= f.text_field :comment, placeholder: "Add a comment ...", class: "form-control post-comment" %>
+                  <div class="input-group-append">
+                  <p id= "post-comment-index-page">
+                  <%= f.submit "Post", class: "btn btn-info float-right" %>
+                  </p>
+                  </div>
+               </div>
+               <% end %>
+            </div>
+         </div>
+         <% end %>
+      </div>
+      <!-- Write your comments here -->
+      <div class="col-4">
+         <div class="account-summary">
+            <p class="m-0">
+                <% #= link_to image_tag(current_user.image.thumb.url, class: "img-circle float-left m-r-15"), profile_path(current_user.username) if current_user.image.thumb.url %> 
+               <%= link_to profile_picture(current_user, 50, 50), profile_path(current_user.username) %>
+               <strong> <%= current_user.username %></strong><br>
+               <%= current_user.full_name %>
+            </p>
+         </div>
+         <div class="follower-suggestions">
+            <%= link_to "View all", "/users", class: "float-right text-dark" %>
+            <p class="text-muted"> Suggestions for you </p>
+            <%= render "users/followers_suggestions" %>
+         </div>
+      </div>
+      <!-- Write your comments here -->
+   </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="container">
+   <div class="row">
+      <div class="col-4">
+         <%= profile_picture(@user, 120, 120) %>
+      </div>
+      <div class="col-8 text-left">
+         <div class="row">
+            <div class="col-6">
+               <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-muted btn-custom float-right" if can_edit_profile?(@user.id) %>
+               <h2> <%= @user.username %> </h2>
+            </div>
+         </div>
+         <div class="row profile-stats">
+            <div class="col-4"> 
+               <%= pluralize(@posts.count, "post") %> 
+            </div>
+            <div class="col-4">
+               <%= link_to pluralize(@user.followers.count, "follower"), follower_list_path(@user.id), class: "text-dark" %>   
+            </div>
+            <div class="col-4">
+               <%= link_to (@user.followings.count.to_s + " following"), following_list_path(@user.id), class: "text-dark" %>   
+            </div>
+            <!-- if the user and current user is same and if already following, do not show the follow link   -->
+            <% if @user != current_user && !@followers.include?(current_user.id) %>
+            <div class= "col-4" id="follow-btn">
+               <%= form_tag follow_account_path, method: :post, class: "float-right" do %>
+               <%= hidden_field_tag :follow_id, @user.id %>
+               <%= hidden_field_tag :profile_page, profile_path(@user.username) %>
+               <%= submit_tag "Follow", class: "btn btn-info" %>
+                <% end %>
+            </div>
+
+            <% elsif @user != current_user && @followers.include?(current_user.id) %>
+            <div class= "col-4" id="follow-btn">
+               <%= form_tag unfollow_account_path, method: :post, class: "float-right" do %>
+               <%= hidden_field_tag :unfollow_id, @user.id %>
+               <%= hidden_field_tag :profile_page, profile_path(@user.username) %>
+               <%= submit_tag "Unfollow", class: "btn btn-info" %>
+                <% end %>
+            </div>
+
+            <% end %>
+
+         </div>
+
+         <p> <%= @user.full_name %> </p>
+         <p> <%= simple_format @user.description %> </p>
+         <p> <%= link_to @user.website if @user.website.present? %> </p>
+      </div>
+   </div>
+   <div class="row profile-posts">
+      <% @posts.each do |post| %>
+      <div class="col-4" id="post-view">
+         <div class="insta-post post-square" style= "backgroud: url(<%= post.image %>) no-repeat center top">
+            <%= link_to image_tag(post.image, class: "img img-fluid"), user_post_path(post.user.id, post.id) %>
+            <%= link_to user_post_path(post.user.id, post.id) do %>
+            <div class="post-stats">
+               <div class="inner">
+                  <i class="fa fa-heart"> </i><%= post.total_likes %> likes 
+                  <i class="fa fa-comment m-l-15"> </i><%= post.total_comments %> comments
+               </div>
+            </div>
+            <% end %>
+         </div>
+      </div>
+      <% end %>
+   </div>
+</div>

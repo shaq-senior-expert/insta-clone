@@ -1,0 +1,7 @@
+<% post.comments.each do |comment| %>
+<%= link_to profile_picture(comment.user, 30, 30), profile_path(comment.user.username) %> 
+<strong> <%= link_to comment.user.username, profile_path(comment.user.username), class: "text-dark" %> </strong>
+<%= comment.comment %><br>
+<%= link_to "Delete", comment_path(comment.id), method: :delete, data: { confirm: "Do you really want to delete me?" }, class: "text-dark" if comment.user_id == current_user.id %> 
+<p class="text-muted m-l-30"> <%= time_ago_in_words comment.created_at %> </p>
+<% end %>

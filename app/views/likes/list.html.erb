@@ -1,0 +1,5 @@
+<h4> Likes </h4><br>
+<% @users.each do |user| %>
+    <%= link_to profile_picture(user, 50, 50), profile_path(user.username) %>
+    <strong> <%= user.username %></strong><br><br> 
+<% end %>
